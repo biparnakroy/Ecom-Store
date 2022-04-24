@@ -64,5 +64,44 @@ class Admin_home(APIView):
         else:
             return redirect('login')
 
+# Add products
+
+class Admin_add_products(APIView):
+    permissions_classes = (IsAuthenticated,)
+
+    def get(self, request):
+        if request.user.user_type == '1':
+            return render(request, 'admin/admin_add_products.html')
+        else:
+            return redirect('login')
+
+    def post(self,request):
+        if request.user.user_type == '1':
+            prod_name = request.POST.get('prod_name')
+            prod_type = request.POST.get('prod_type')
+            prod_des = request.POST.get('prod_des')
+            prod_pic = request.POST.get('prod_pic')
+            prod_price = request.POST.get('prod_price')
+
+            print(prod_name)
+
+            # create a new product
+            if prod_name and prod_type and prod_des and prod_pic and prod_price :
+                product = Products.objects.create(uuid=uuid.uuid4(),name=prod_name, product_type=prod_type, description=prod_des,picture=prod_pic,price=prod_price)
+                messages.success(request, 'Department Created Successfully')
+                return redirect('admin_home')
+            else:
+                return redirect('admin_add_products')
+        else:
+            return redirect('login')
+
+
+
+
+
+        
+
+
+
 
 
