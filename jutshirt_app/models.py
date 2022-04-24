@@ -25,6 +25,7 @@ class Customer(models.Model):
     customer_year =models.CharField(max_length=100, blank=True)
     customer_phone = models.CharField(max_length=100, blank=True)
     cart= models.CharField(max_length=10000, blank=True)
+    discount = models.CharField(max_length=100, blank=True)
     profile_pic = models.FileField(default="/media/user.png")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
