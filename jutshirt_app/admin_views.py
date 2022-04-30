@@ -16,7 +16,7 @@ from rest_framework.exceptions import ParseError
 from rest_framework.parsers import FileUploadParser
 from rest_framework.renderers import JSONRenderer
 
-from jutshirt_app.models import CustomUser, Admin, Customer, Products, Oder
+from jutshirt_app.models import CustomUser, Admin, Customer, Products, Order
 import uuid
 from datetime import datetime
 from django.contrib.auth import authenticate, login, logout
@@ -43,6 +43,54 @@ firebase = pyrebase.initialize_app(config)
 storage = firebase.storage()
 
 
+# Admin Profile View
+class AdminProfileView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
+        admin = Admin.objects.get(user=request.user)
+        context = {
+            'admin': admin,
+        }
+        return render(request, 'admin/admin_profile.html', context)
+
+# Admin Profile Edit
+class AdminProfileEditView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
+        admin = Admin.objects.get(user=request.user)
+        context = {
+            'admin': admin,
+        }
+        return render(request, 'admin/admin_profile_edit.html', context)
+
+    def post(self, request):
+        admin = Admin.objects.get(user=request.user)
+        admin.user.first_name = request.POST['first_name']
+        admin.user.last_name = request.POST['last_name']
+        admin.user.email = request.POST['email']
+        password = request.POST['password']
+
+        # changing password if not empty
+        if password != '':
+            # setting new password
+            admin.user.set_password(password)
+            admin.user.save()
+            # re authenticating user with new password and emailbackend
+            user = EmailBackEnd.authenticate(request, username=admin.user.email, password=password)
+            if user is not None:
+                login(request, user)
+            else :
+                return redirect('login')
+            #user = authenticate(username=admin.user.username, password=password)
+
+        admin.user.save()
+        admin.save()
+
+        return redirect('admin_profile')
+
+
 # Admin Home Dashboard
 class Admin_home(APIView):
     permission_classes = (IsAuthenticated,)
@@ -51,7 +99,7 @@ class Admin_home(APIView):
         if request.user.user_type == '1':
             product_count = Products.objects.all().count()
             customer_count = Customer.objects.all().count()
-            order_count = Oder.objects.all().count()
+            order_count = Order.objects.all().count()
 
 
             context = {
@@ -95,11 +143,157 @@ class Admin_add_products(APIView):
         else:
             return redirect('login')
 
+# manage products
+class Manage_products(APIView):
+    permissions_classes = (IsAuthenticated,)
+
+    def get(self,request):
+        products = Products.objects.all()
+        context={
+            'products' : products,
+        }
+        return render(request,'admin/admin_manage_products.html', context)
+
+# view products
+class View_products(APIView):
+    permissions_classes = (IsAuthenticated,)
+
+    def get(self,request,prod_uuid):
+        if request.user.user_type == '1':
+            prod = Products.objects.get(uuid=prod_uuid)
+            context = {
+                'prod': prod,
+            }
+            return render(request, 'admin/admin_view_prod.html', context)
+        else:
+            return redirect('login')
+
+# edit products
+class Edit_products(APIView):
+    permissions_classes = (IsAuthenticated,)
+
+    def get(self,request, prod_uuid):
+        if request.user.user_type == '1':
+            prod = Products.objects.get(uuid=prod_uuid)
+            context = {
+                'prod': prod,
+            }
+            return render(request, 'admin/admin_edit_prod.html', context)
+        else:
+            return redirect('login')
+
+    def post(self,request,prod_uuid):
+        if request.user.user_type == '1':
+            prod = Products.objects.get(uuid=prod_uuid)
+            prod_name = request.POST.get('prod_name')
+            prod_type = request.POST.get('prod_type')
+            prod_des = request.POST.get('prod_des')
+            prod_pic = request.POST.get('prod_pic')
+            prod_price = request.POST.get('prod_price')
+
+            if prod_name and prod_type and prod_des and prod_pic and prod_price :
+                prod.name = prod_name
+                prod.product_type = prod_type
+                prod.description = prod_des
+                prod.picture = prod_pic
+                prod.price = prod_price
+                prod.save()
+                return redirect('admin_manage_products')
+            else:
+                return redirect('admin_manage_products')
+        else:
+            return redirect('login')
+    
+# delete product
+class Delete_prod(APIView):
+    permission_classes = (IsAuthenticated,)
+    def get(self, request, prod_uuid):
+        if request.user.user_type == '1':
+            prod = Products.objects.get(uuid=prod_uuid)
+            prod.delete()
+            return redirect('admin_manage_products')
+        else:
+            return redirect('login')
+    
+
+# Manage Customers
+
+class Manage_customers(APIView):
+    permission_classes = (IsAuthenticated,)
+    def get(self, request):
+        if request.user.user_type == '1':
+            customer = Customer.objects.all()
+            context = {
+                'customers' : customer,
+            }
+            return render(request, 'admin/admin_manage_customer.html', context)
+        else:
+            return redirect('login')
+
+# View Customers
+
+class View_customers(APIView):
+    permission_classes = (IsAuthenticated,)
+    def get(self,request,uuid):
+        if request.user.user_type == '1':
+            customer = Customer.objects.get(customer_uuid=uuid)
+            cart = customer.cart
+            context={
+                'customer' : customer,
+                'cart' : "",
+            }
+            if cart:
+                cart = cart.split('|')
+                items=[]
+                for item in cart:
+                    if len(item):
+                        current_cart  = item.split(',')
+                        current_cart[0]= current_cart[0][1:]
+                        current_cart[-1] = current_cart[-1][:-1]
+                        current_item = {
+                            'prod' : Products.objects.get(uuid= current_cart[0]),
+                            'size' : current_cart[1],
+                            'qnt' : current_cart[2],
+                        }
+                        items.append(current_item)
+                        context={
+                            'customer' : customer,
+                            'cart' : items,
+                        }
+                    else:
+                        pass
+                   
+            return render(request,'admin/admin_view_customer.html', context)
+        else :
+            redirect('login')
 
 
 
 
-        
+#=====================Form Validation Function=====================
+
+#checking if the username is already taken
+class Username_check(APIView):
+    permission_classes = (IsAuthenticated,)
+    def post(self, request):
+        username = request.POST.get('username')
+        user = CustomUser.objects.filter(username=username).exists()
+        if user:
+            return JsonResponse({'status': 'taken'})
+        else:
+            return JsonResponse({'status': 'available'})
+
+
+#checking if the email is already taken
+class Email_check(APIView):
+    permission_classes = (IsAuthenticated,)
+    def post(self, request):
+        email = request.POST.get('email')
+        user = CustomUser.objects.filter(email=email).exists()
+        if user:
+            return JsonResponse({'status': 'taken'})
+        else:
+            return JsonResponse({'status': 'available'})
 
 
 

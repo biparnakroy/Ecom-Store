@@ -68,8 +68,8 @@ def do_signup(request):
         username =  uuid.uuid4()
 
         user = CustomUser.objects.create_user(username=username, password=password, email=email, first_name=first_name, last_name=last_name, user_type=2)
-        user.customer.year = year
-        user.customer.phone = phone
+        user.customer.customer_year = year
+        user.customer.customer_phone = phone
         user.customer.uuid = username
         user.save()
 

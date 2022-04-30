@@ -1,0 +1,49 @@
+{% extends "admin/admin_base.html" %}
+
+
+{% block content %}
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+  <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Edit product : {{prod.name}}</h1>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+              <!--form for new department-->
+              <form action="{%url 'admin_edit_prod' prod.uuid%}" method="POST">
+                {%csrf_token%}
+                <div class="form-row">
+                  <div class="col" style="margin-bottom:10px;">
+                    <label for="prod_name" style="margin-bottom:10px;">Product Name</label>
+                    <input type="text" class="form-control" value="{{prod.name}}" name="prod_name">
+                  </div>
+                  <div class="col" style="margin-bottom:10px;">
+                    <label for="prod_type"style="margin-bottom:10px;">Product Type</label>
+                    <input type="text" class="form-control"  value="{{prod.product_type}}" name="prod_type">
+                  </div>
+                  <div class="col" style="margin-bottom:10px;">
+                    <label for="prod_des"style="margin-bottom:10px;">Product description</label>
+                    <input type="text" class="form-control"  value="{{prod.description}}" name="prod_des">
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="col" style="margin-bottom:10px;">
+                    <label for="prod_pic" style="margin-bottom:10px;">Picture link</label>
+                    <input type="text" class="form-control" value="{{prod.picture}}" name="prod_pic">
+                  </div>
+                  <div class="col" style="margin-bottom:10px;">
+                    <label for="prod_price" style="margin-bottom:10px;" >Price AKA PAISA</label>
+                    <input type="text" class="form-control" value="{{prod.price}}" name="prod_price">
+                  </div>
+                </div>
+                <button type="submit" style="margin-top: 10px;" class="btn btn-primary">Update Product</button>
+              </form>
+            </div>
+          </div>
+    </div>
+  </div>
+
+          
+</main>
+{% endblock content %}

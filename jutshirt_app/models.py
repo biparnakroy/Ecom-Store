@@ -42,11 +42,13 @@ class Products(models.Model):
     price = models.CharField(max_length=100, blank=True)
 
 
-#oder model
-class Oder(models.Model):
+#order model
+class Order(models.Model):
     uuid=models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     oder_customer = models.ForeignKey(Customer,on_delete=models.CASCADE, null=True)
     product_list = models.CharField(max_length=10000, blank=True)
+    quantity_list = models.CharField(max_length=10000, blank=True)
+    size_list = models.CharField(max_length=10000, blank=True)
     amount = models.CharField(max_length=100, blank=True)
     payment_mode = models.CharField(max_length=100, blank=True)
     is_paid = models.BooleanField()

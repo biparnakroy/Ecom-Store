@@ -1,0 +1,63 @@
+{% extends "admin/admin_base.html" %}
+{%load static%}
+
+{% block content %}
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+  <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Viewing Customer : {{customer.user.first_name}} {{customer.user.last_name}}</h1>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                  <div class="col-3">
+                    <img src="{{customer.profile_pic}}" style="height:310px; width:300px;border-radius:5px;"class="img-fluid">
+                  </div>
+                  <div class="col">
+                    <ul class="list-group">
+                      <li class="list-group-item" style="padding:15px;">Name :</li>
+                      <li class="list-group-item" style="padding:15px;">Year :</li>
+                      <li class="list-group-item" style="padding:15px;">Phone :</li>
+                      {% comment %} <li class="list-group-item" style="padding:15px;">Discount :</li> {% endcomment %}
+                      <li class="list-group-item" style="padding:15px;">UUID :</li>
+                  </ul>
+                  </div>
+                  <div class="col">
+                    <ul class="list-group">
+                      <li class="list-group-item"  style="padding:15px;">{{customer.user.first_name}} {{customer.user.last_name}}</li>
+                      <li class="list-group-item"  style="padding:15px;">{{customer.customer_year}}</li>
+                      <li class="list-group-item"  style="padding:15px;">{{customer.customer_phone}}</li>
+                      {% comment %} <li class="list-group-item"  style="padding:15px;">{{customer.discount}}</li> {% endcomment %}
+                      <li class="list-group-item"  style="padding:15px;">{{customer.customer_uuid}}</li>
+                  </ul>
+                  </div>
+                </div>
+              
+                <div class = "row">
+                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                        <h1 class="h2">Cart</h1>
+                     </div>
+                     {%if cart%}
+                      {%for item in cart%}
+                        <div class="col-md-3">
+                             <img src="{{item.prod.picture}}" style="height:210px; width:200px;border-radius:5px;"class="img-fluid">
+                             <br>
+                             size : {{item.size}}<br/>
+                             quantity :  {{item.qnt}}<br>
+                             Price : {{item.prod.price}}</br>
+                             Sub_tot : {% widthratio item.prod.price 1 item.qnt %} <br>
+                             <a href="{%url 'admin_view_prod' item.prod.uuid%}"> <button class='btn btn-success'>View Product</button> </a>
+                        </div>
+                      {%endfor%}
+                      
+                     {%else%}
+                      Cart Empty
+                     {%endif%}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</main>
+{% endblock content %}
