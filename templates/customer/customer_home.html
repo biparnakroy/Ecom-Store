@@ -1,0 +1,33 @@
+{% extends "customer/customer_base.html" %}
+{% load static%}
+{% block content %}
+    <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+          <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+          <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
+          <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        </div>
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            {% if request.user_agent.is_pc %}
+            <img src="{%static 'images/slide.png'%}" class="d-block w-100" style="height:90vh" alt="...">
+            {% else%}
+            <img src="{%static 'images/slide_mobile.png'%}" class="d-block w-100" style="height:90vh" alt="...">
+            {% endif %}
+            <div class="carousel-caption d-md-block view_prod">
+                <h1 style="color:black; margin-bottom:5vh; float:left; margin-left:-10vw;">
+                  <a class="btn btn-primary" style="font-size:3rem; background-color:black; border-color:black; padding: 10px 35px;"> View Products </a>
+                </h1>
+            </div>
+          </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+      {% endblock content %}

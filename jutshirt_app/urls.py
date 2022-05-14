@@ -1,5 +1,5 @@
 from django.urls import path, include , re_path
-from . import views , admin_views
+from . import views , admin_views , customer_views
 
 urlpatterns = [
     path('', views.signup_page, name='signup'),
@@ -20,7 +20,11 @@ urlpatterns = [
     path('admin_delete_prod/<prod_uuid>', admin_views.Delete_prod.as_view(),name="admin_delete_prod"),
     path('admin_manage_customers/', admin_views.Manage_customers.as_view(),name="admin_manage_customers"),
     path('admin_view_customer/<uuid>', admin_views.View_customers.as_view(),name="admin_view_customer"),
+    path('admin_edit_customer/<uuid>', admin_views.View_customers.as_view(),name="admin_edit_customer"),
 
+
+    path('home/', customer_views.Customer_home.as_view(),name="customer_home"),
+    
     #===================== Form Validation Views============================
     path('admin_email_check/', admin_views.Email_check.as_view(), name="admin_email_check"),
     path('admin_username_check/', admin_views.Username_check.as_view(), name="admin_username_check"),

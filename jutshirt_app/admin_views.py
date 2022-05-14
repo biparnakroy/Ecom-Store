@@ -265,8 +265,21 @@ class View_customers(APIView):
                    
             return render(request,'admin/admin_view_customer.html', context)
         else :
-            redirect('login')
+            return redirect('login')
 
+#=======================Edit Customer=====================
+
+class Edit_customer(APIView):
+    def get(self, request,uuid):
+        if request.user.user_type == '1':
+            customer = Customer.objects.get(customer_uuid=uuid)
+            context={
+                'customer' : customer,
+            }
+            return render(request,'admin/admin_edit_customer.html', context)
+        else:
+            return redirect('login')
+    
 
 
 

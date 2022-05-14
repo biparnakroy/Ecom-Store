@@ -19,6 +19,7 @@
                       <li class="list-group-item" style="padding:15px;">Name :</li>
                       <li class="list-group-item" style="padding:15px;">Year :</li>
                       <li class="list-group-item" style="padding:15px;">Phone :</li>
+                      <li class="list-group-item" style="padding:15px;">Email :</li>
                       {% comment %} <li class="list-group-item" style="padding:15px;">Discount :</li> {% endcomment %}
                       <li class="list-group-item" style="padding:15px;">UUID :</li>
                   </ul>
@@ -28,6 +29,7 @@
                       <li class="list-group-item"  style="padding:15px;">{{customer.user.first_name}} {{customer.user.last_name}}</li>
                       <li class="list-group-item"  style="padding:15px;">{{customer.customer_year}}</li>
                       <li class="list-group-item"  style="padding:15px;">{{customer.customer_phone}}</li>
+                      <li class="list-group-item"  style="padding:15px;">{{customer.user.email}}</li>
                       {% comment %} <li class="list-group-item"  style="padding:15px;">{{customer.discount}}</li> {% endcomment %}
                       <li class="list-group-item"  style="padding:15px;">{{customer.customer_uuid}}</li>
                   </ul>

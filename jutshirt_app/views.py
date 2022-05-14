@@ -37,9 +37,8 @@ def doLogin(request):
                 return redirect('admin_home')
 
             elif user_type == '2':
-                return HttpResponse("Staff Login")
-                # return redirect('customer_home')
-
+                #return HttpResponse("Staff Login")
+                return redirect('customer_home')
             else:
                 messages.error(request, "Invalid Login!")
                 return redirect('login')
@@ -81,10 +80,10 @@ def do_signup(request):
             return redirect('login')
 
         elif user_type == '2':
-            return HttpResponse("Customer Login")
-            # return redirect('customer_home')
+            #return HttpResponse("Customer Login")
+            return redirect('customer_home')
 
 
 def logout_user(request):
     logout(request)
-    return HttpResponseRedirect('/')
+    return redirect('login')
