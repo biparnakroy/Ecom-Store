@@ -39,3 +39,35 @@ class Customer_home(APIView):
             return render(request, 'customer/customer_home.html', context)
         else:
             return redirect('login')
+
+# Customer Product Page
+class Customer_product(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
+        if request.user.user_type == '2':
+            products = Products.objects.all()
+            context = {
+                'products' : products,
+            }
+
+            return render(request, 'customer/customer_product.html', context)
+        else:
+            return redirect('login')
+
+# Customer Product View Page
+class Customer_product_view(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, uuid):
+        if request.user.user_type == '2':
+            product = Products.objects.get(uuid=uuid)
+            context = {
+                'product' : product,
+            }
+
+            return render(request, 'customer/customer_product_view.html', context)
+        else:
+            return redirect('login')
+
+

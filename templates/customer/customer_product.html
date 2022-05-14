@@ -1,0 +1,33 @@
+{% extends "customer/customer_base.html" %}
+{% load static%}
+{% block content %}
+{% load icon %}
+<div class="container-fluid" style="width:80vw; margin-top: 5vh;">
+    <!--displaying the products-->
+    <h1>  {% icon "shopping-cart" %} Our Products </h1>
+    <hr>
+    <br>
+    <div class="row" >
+        {% for product in products %}
+        <div class="col-md-3">
+            <div class="card mb-5 shadow-sm" style="border-color: black; border-width:2px; border-radius:5px; ">
+                    <center>
+                        <img src="{{ product.picture }}" alt="{{ product.name }}" class="card-img-top">
+                    </center>
+                <div class="card-body">
+                    <p class="card-text">{{ product.name }}</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="btn-group">
+                            <a href="{%url 'customer_product_view' product.uuid%}" class="btn btn-sm btn-outline-secondary">View Product</a>
+                        </div>
+                        <small class="text-muted"> Price : {{ product.price }} INR</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+
+{% endblock content %}

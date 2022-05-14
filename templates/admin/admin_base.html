@@ -37,13 +37,11 @@
       }
     </style>
     <!--collapse sidebar-->
-
-    {% comment %} <script type="text/javascript">
-      document.getElementById("mybutton").addEventListener("click", myFunction);
-      function myFunction() {
-        document.getElementById("sidebarMenu").style.display = "none"; 
-      }
-    </script>  {% endcomment %}
+    <script type="text/javascript">
+      $(document).ready(function() {
+          $('a[href$="' + location.pathname + '"]').addClass('active');
+      }); 
+  </script> 
     {% block js %}{% endblock js %}
   </head>
   <body>
@@ -73,7 +71,7 @@
       <div class="position-sticky pt-3">
         <ul class="nav flex-column">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="{%url 'admin_home'%}">
+            <a class="nav-link" aria-current="page" href="{%url 'admin_home'%}">
               {% icon "home" %}
                 Dashboard
             </a>

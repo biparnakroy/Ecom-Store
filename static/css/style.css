@@ -1,0 +1,13 @@
+#view_prod a{
+    font-size:3rem; 
+    background-color:black; 
+    border-color:black; 
+    padding: 10px 35px;
+}
+
+/* media queries*/
+@media screen and (max-width: 400px) {
+    #view_prod a{
+        font-size:1rem;
+    }
+}

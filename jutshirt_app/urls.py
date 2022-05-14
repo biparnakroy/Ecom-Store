@@ -24,6 +24,8 @@ urlpatterns = [
 
 
     path('home/', customer_views.Customer_home.as_view(),name="customer_home"),
+    path('products/', customer_views.Customer_product.as_view(),name="customer_product"),
+    path('product_view/<uuid>/', customer_views.Customer_product_view.as_view(), name="customer_product_view"),
     
     #===================== Form Validation Views============================
     path('admin_email_check/', admin_views.Email_check.as_view(), name="admin_email_check"),

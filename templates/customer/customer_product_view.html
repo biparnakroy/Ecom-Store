@@ -1,0 +1,35 @@
+{% extends "customer/customer_base.html" %}
+{% load static%}
+{% block content %}
+{% load icon %}
+<div class="container-fluid" style="width:80vw; margin-top: 5vh;">
+    <!--displaying the products-->
+    <h1>  {% icon "shopping-cart" %} {{product.name}} </h1>
+    <hr>
+    <br>
+    <div class="row" >
+        <div class="col-md-6" style="margin-bottom:20px;">
+            {% if request.user_agent.is_pc %}
+                <center>
+                    <img src="{{product.picture}}" alt="product image">
+                </center>
+            {% else %}
+                <center>
+                    <img src="{{product.picture}}" alt="product image" style="width:80vw; height:40vh;">
+                </center>
+            {% endif %}
+        </div>
+        <div class="col-md-6"  style="margin-bottom:20px;">
+            <h3>Name : {{product.name}}</h3>
+            <p> Product ID : {{product.uuid}}</p>
+            <h4>Description : {{product.description}}</h4>
+            <h4>Price: {{product.price}} INR</h4>
+            <h4>Category: {{product.product_type}}</h4>
+            <h4>Sizes: S, M, L, XL, XXL, XXXL</h4>
+            <br>
+            <a id="view_prod" class="btn btn-primary" style="font-size:1.5rem; background-color:black; border-color:black; padding: 10px 35px;" href="{%url 'customer_product'%}"> Add to cart </a>
+    </div>
+
+</div>
+
+{% endblock content %}

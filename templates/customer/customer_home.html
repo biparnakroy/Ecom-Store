@@ -14,10 +14,16 @@
             {% else%}
             <img src="{%static 'images/slide_mobile.png'%}" class="d-block w-100" style="height:90vh" alt="...">
             {% endif %}
-            <div class="carousel-caption d-md-block view_prod">
+            <div class="carousel-caption d-md-block">
+              {% if request.user_agent.is_pc %}
                 <h1 style="color:black; margin-bottom:5vh; float:left; margin-left:-10vw;">
-                  <a class="btn btn-primary" style="font-size:3rem; background-color:black; border-color:black; padding: 10px 35px;"> View Products </a>
+                  <a id="view_prod" class="btn btn-primary" style="font-size:3rem; background-color:black; border-color:black; padding: 10px 35px;" href="{%url 'customer_product'%}"> View Products </a>
                 </h1>
+              {% else%}
+                <h1 style="color:black; margin-bottom:5vh; float:left; margin-left:-10vw;">
+                  <a id="view_prod" class="btn btn-primary" style="font-size:1.5rem; background-color:black; border-color:black; padding: 10px 35px;" href="{%url 'customer_product'%}"> View Products </a>
+                </h1>
+              {% endif %}
             </div>
           </div>
         </div>
@@ -30,4 +36,4 @@
           <span class="visually-hidden">Next</span>
         </button>
       </div>
-      {% endblock content %}
+  {% endblock content %}
