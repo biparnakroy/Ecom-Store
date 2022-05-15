@@ -1,5 +1,77 @@
 {% extends "customer/customer_base.html" %}
 {% load static%}
+
+{%block css%}
+    <style>
+        .qty .count {
+            color: #000;
+            display: inline-block;
+            vertical-align: top;
+            font-size: 25px;
+            font-weight: 700;
+            line-height: 30px;
+            padding: 0 2px
+            ;min-width: 35px;
+            text-align: center;
+        }
+        .qty .plus {
+            cursor: pointer;
+            display: inline-block;
+            vertical-align: top;
+            color: white;
+            width: 30px;
+            height: 30px;
+            font: 30px/1 Arial,sans-serif;
+            text-align: center;
+            border-radius: 50%;
+            }
+        .qty .minus {
+            cursor: pointer;
+            display: inline-block;
+            vertical-align: top;
+            color: white;
+            width: 30px;
+            height: 30px;
+            font: 30px/1 Arial,sans-serif;
+            text-align: center;
+            border-radius: 50%;
+            background-clip: padding-box;
+        }
+        .minus:hover{
+            background-color: #717fe0 !important;
+        }
+        .plus:hover{
+            background-color: #717fe0 !important;
+        }
+        /*Prevent text selection*/
+        span{
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+        input{  
+            border: 0;
+            width: 2%;
+        }
+        nput::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input:disabled{
+            background-color:white;
+        }
+        
+        @media (max-width: 500px) {
+           img{
+            width:80vw; 
+            height:40vh
+           }
+        }
+    </style>
+{%endblock%}
+
+
 {% block content %}
 {% load icon %}
 <div class="container-fluid" style="width:80vw; margin-top: 5vh;">
@@ -9,15 +81,9 @@
     <br>
     <div class="row" >
         <div class="col-md-6" style="margin-bottom:20px;">
-            {% if request.user_agent.is_pc %}
                 <center>
                     <img src="{{product.picture}}" alt="product image">
                 </center>
-            {% else %}
-                <center>
-                    <img src="{{product.picture}}" alt="product image" style="width:80vw; height:40vh;">
-                </center>
-            {% endif %}
         </div>
         <div class="col-md-6"  style="margin-bottom:20px;">
             <h3>Name : {{product.name}}</h3>
@@ -25,11 +91,124 @@
             <h4>Description : {{product.description}}</h4>
             <h4>Price: {{product.price}} INR</h4>
             <h4>Category: {{product.product_type}}</h4>
-            <h4>Sizes: S, M, L, XL, XXL, XXXL</h4>
+            <h4>
+                Size: S, M, L, XL, XXL, XXXL
+                <select class="form-control form-select mt-1"  style="margin-bottom:10px;" id="size">
+                    <option value="" hidden>Select Size</option>
+                    <option>S</option>
+                    <option>M</option>
+                    <option>L</option>
+                    <option>XL</option>
+                    <option>XXL</option>
+                    <option>XXXL</option>
+                  </select>
+            </h4>
+            <div class="qty mb-2">
+                <h4>Quantity:</h4>
+                <span class="minus bg-dark">-</span>
+                <input type="number" class="count" name="qty" value="1">
+                <span class="plus bg-dark">+</span>
+            </div>
             <br>
-            <a id="view_prod" class="btn btn-primary" style="font-size:1.5rem; background-color:black; border-color:black; padding: 10px 35px;" href="{%url 'customer_product'%}"> Add to cart </a>
+            <button id="add_to_car"  class="btn btn-primary" style="font-size:1.5rem; background-color:black; border-color:black; padding: 10px 35px;"> Add to cart </button>
     </div>
 
 </div>
 
 {% endblock content %}
+
+{% block js %}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.14/dist/sweetalert2.all.min.js"></script>
+    <script type="text/javascript">
+        // getting get getCookies
+        function getCookie(name){
+            var cookieValue = null;
+            if (document.cookie && document.cookie != '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        $(document).ready(function(){
+		    $('.count').prop('disabled', true);
+   			$(document).on('click','.plus',function(){
+				$('.count').val(parseInt($('.count').val()) + 1 );
+    		});
+        	$(document).on('click','.minus',function(){
+    			$('.count').val(parseInt($('.count').val()) - 1 );
+    				if ($('.count').val() == 0) {
+						$('.count').val(1);
+					}
+    	    	});
+
+            $('#add_to_car').click(function(){
+                var product_uuid = "{{product.uuid}}";
+                var size = $('#size').val();
+                var qty = $('.count').val();
+                console.log('HI');
+                if(size == ''){
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Select a size!',
+                        icon: 'error',
+                        confirmButtonText: 'Ok'
+                      });
+                      
+                    console.log('size is empty');
+                    return false;
+                }
+                $.ajax({
+                    url: "{% url 'add_to_cart' %}",
+                    type: 'POST',
+                    headers: {
+                        "X-CSRFToken": getCookie('csrftoken')
+                    },
+                    data: {
+                        product_uuid: product_uuid,
+                        size: size,
+                        qty: qty
+                    },
+                    // redirect to cart page
+                    success: function(data){
+                        console.log(data);
+                        // checking if http response is success
+                        if(data == 'success'){
+                            Swal.fire({
+                                title: 'Success!',
+                                text: 'Product added to cart!',
+                                icon: 'success',
+                                confirmButtonText: 'Ok'
+                              });
+                            $(".swal2-confirm").click(function () {
+                                window.location.href = "{% url 'customer_cart' %}";
+                              });
+                        }
+                        else{
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Product already in cart!',
+                                icon: 'error',
+                                confirmButtonText: 'Ok'
+                              });
+                        }
+                    },
+                });
+            });
+        
+ 		});
+
+
+        // function to add product to cart
+
+        
+    </script>
+
+{% endblock js %}

@@ -1,5 +1,6 @@
 {% spaceless %}
 {% load static%}
+{% load icon %}
 <!doctype html>
 <html lang="en">
   <head>
@@ -23,6 +24,7 @@
             $('a[href$="' + location.pathname + '"]').addClass('active');
         }); 
     </script> 
+    {%block css%}{%endblock css%}
     {% block js %}{% endblock js %}
   </head>
   <body>
@@ -33,6 +35,21 @@
               <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
               </button>
+              <ul class="navbar-nav ml-auto d-none d-md-none">
+                    <li class="nav-item dropdown">
+                    
+                      <a class="nav-link dropdown-toggle" style="font-size: 1.5rem;" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="{{user.customer.profile_pic}}" style="height:30px; width:30px; margin-right:4px; margin-top:-2px; border-radius:50%;"/>{{user.first_name}} {{user.last_name}}
+                      </a>
+                      <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="{%url 'customer_cart'%}"> {% icon "shopping-cart" %} View Cart</a></li>
+                        <li><a class="dropdown-item" href="#">{% icon "truck" %} View Orders</a></li>
+                        <li><a class="dropdown-item" href="#">{% icon "user" %} View Profile</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{% url 'logout_user' %}">Logout</a></li>
+                      </ul>
+                    </li>
+                </ul>
               <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                   <li class="nav-item active">
@@ -41,16 +58,33 @@
                   <li class="nav-item">
                     <a class="nav-link" data-toggle="tab" href="{%url 'customer_product'%}">Products</a>
                   </li>
+                  <li><a class="nav-link" href="{%url 'customer_cart'%}"> Cart</a></li>
+                  <ul class="navbar-nav ml-auto d-md-none">
+                    <li class="nav-item dropdown">
+                    
+                      <a class="nav-link dropdown-toggle" style="font-size: 1.5rem;" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="{{user.customer.profile_pic}}" style="height:30px; width:30px; margin-right:4px; margin-top:-2px; border-radius:50%;"/>{{user.first_name}} {{user.last_name}}
+                      </a>
+                      <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="{%url 'customer_cart'%}"> {% icon "shopping-cart" %} View Cart</a></li>
+                        <li><a class="dropdown-item" href="#">{% icon "truck" %} View Orders</a></li>
+                        <li><a class="dropdown-item" href="#">{% icon "user" %} View Profile</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{% url 'logout_user' %}">Logout</a></li>
+                      </ul>
+                    </li>
+                </ul>
                 </ul>
                 <ul class="navbar-nav ml-auto d-none d-md-block">
                     <li class="nav-item dropdown">
+                    
                       <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <img src="{{user.customer.profile_pic}}" style="height:40px; width:40px; margin-right:4px; margin-top:-2px; border-radius:50%;"/>{{user.first_name}} {{user.last_name}}
                       </a>
                       <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="#">View Cart</a></li>
-                        <li><a class="dropdown-item" href="#">View Orders</a></li>
-                        <li><a class="dropdown-item" href="#">View Profile</a></li>
+                        <li><a class="dropdown-item" href="{%url 'customer_cart'%}"> {% icon "shopping-cart" %} View Cart</a></li>
+                        <li><a class="dropdown-item" href="#">{% icon "truck" %} View Orders</a></li>
+                        <li><a class="dropdown-item" href="#">{% icon "user" %} View Profile</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="{% url 'logout_user' %}">Logout</a></li>
                       </ul>

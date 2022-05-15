@@ -1,0 +1,80 @@
+{% extends "customer/customer_base.html" %}
+{% load static%}
+
+{%block css%}
+ <style>
+    #checkout-mobile {
+        display : none;
+    }
+    @media (max-width: 500px) {
+        #checkout {
+            display : none;
+        }
+        #checkout-mobile {
+            display : block;
+        }
+    }
+ </style>
+{%endblock%}
+
+{% block content %}
+{% load icon %}
+
+<div class="container-fluid" style="width:80vw; margin-top: 5vh;">
+    <!--displaying the products-->
+    <div class="d-flex justify-content-between align-items-center">
+        <h1 id="cart-header">Order Summary</h1>
+        <h2 id="checkout"> {% icon "shopping-cart"%} Total: {{total}} INR
+        </h2>
+    </div>
+    <hr>
+    <div  class="d-flex justify-content-between align-items-center" >
+        <h2 id="checkout-mobile"> {% icon "shopping-cart"%} Total: {{total}} INR</h2>
+    </div>
+
+    <br>
+    <div class="row" >
+        {% for item in cart %}
+        <div class="col-md-3">
+            <div class="card mb-5 shadow-sm" style="border-color: black; border-width:2px; border-radius:5px; ">
+                    <center>
+                        <img src="{{ item.prod.picture }}" alt="{{ item.prod.name }}" style="width:200px; height:250px;"class="card-img-top">
+                    </center>
+                <div class="card-body">
+                    <p class="card-text">{{ item.prod.name }}</p>
+                    {% comment %} <div class="d-flex justify-content-between align-items-center">
+                        <div class="btn-group">
+                            <a href="{%url 'customer_product_view' item.prod.uuid%}" class="btn btn-sm btn-outline-secondary">View Product</a>
+                            <a href="{%url 'delete_cart_item' item.prod.uuid item.size%}" class="btn btn-sm btn-outline-secondary">Delete Product</a>
+                        </div>
+                    </div> {% endcomment %}
+                    <small class="text-muted"> Price : {{ item.prod.price }} INR</small>
+                    <br>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span> Size : {{ item.size }}</span> <br>
+                        <span> Quantity : {{ item.qnt }}</span><br>
+                    </div>
+                    <span class="text-muted"> Sub-Total : {% widthratio item.prod.price 1 item.qnt %} INR</span>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        <hr>
+    </div>
+
+    <br>
+    <div class="row">
+        <div class="col-md-12" style="margin-bottom:20px;">
+            <div class="d-flex justify-content-center align-items-center">
+                <a href="{% url 'customer_home' %}" class="btn btn-lg btn-outline-secondary" style="font-size:1.5rem; background-color:black; color:white; border-color:black; padding: 20px 40px;">Pay Now</a>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="d-flex justify-content-center align-items-center">
+                <a href="{% url 'customer_checkout' %}" class="btn btn-lg btn-outline-secondary" style="font-size:1.5rem; background-color:black; color:white; border-color:black; padding: 20px 40px;">Pay Offline</a>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock content %}

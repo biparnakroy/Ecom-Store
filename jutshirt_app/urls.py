@@ -26,6 +26,10 @@ urlpatterns = [
     path('home/', customer_views.Customer_home.as_view(),name="customer_home"),
     path('products/', customer_views.Customer_product.as_view(),name="customer_product"),
     path('product_view/<uuid>/', customer_views.Customer_product_view.as_view(), name="customer_product_view"),
+    path('add_to_cart/', customer_views.Add_to_cart.as_view(), name="add_to_cart"),
+    path('cart/', customer_views.Customer_cart.as_view(), name="customer_cart"),
+    path('delete_cart_item/<uuid>/<size>/', customer_views.Delete_from_cart.as_view(), name="delete_cart_item"),
+    path('checkout/', customer_views.Customer_checkout.as_view(), name="customer_checkout"),
     
     #===================== Form Validation Views============================
     path('admin_email_check/', admin_views.Email_check.as_view(), name="admin_email_check"),
